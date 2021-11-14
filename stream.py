@@ -47,7 +47,7 @@ def push_to_loki(json_response):
     
     tweet = json_response['data']['text']
     
-    submission = [timestamp_nanoseconds, tweet]
+    submission = [str(timestamp_nanoseconds), tweet]
 
     loki_request = {}
     loki_request["streams"] = []
@@ -65,7 +65,19 @@ def push_to_loki(json_response):
     }
 
     loki_request["streams"].append(internal_dict)
-    response = requests.request("POST", loki_url, data=loki_dict, verify=False)
+    headers = {'X-Scope-OrgID': 'fake', 'Content-Type': 'application/json'}
+    print(headers)
+    print(loki_request)
+    response = requests.request(
+        "POST",
+        loki_url,
+        data=json.dumps(loki_request),
+        verify=False,
+        headers=headers
+    )
+
+    print(response.text)
+    print(response.status_code)
 
 
 def main():
