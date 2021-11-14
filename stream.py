@@ -6,7 +6,7 @@ bearer_token = os.environ.get("BEARER_TOKEN")
 
 
 def create_url():
-    return "https://api.twitter.com/2/tweets/sample/stream?tweet.fields=created_at"
+    return "https://api.twitter.com/2/tweets/sample/stream?tweet.fields=created_at,lang"
 
 
 def bearer_oauth(r):
@@ -32,6 +32,10 @@ def connect_to_endpoint(url):
                 response.status_code, response.text
             )
         )
+
+def push_to_loki(json_response):
+    loki_url = "https://loki.lab.home/loki/api/v1/push"
+    #"Content-Type: application/json"
 
 
 def main():
