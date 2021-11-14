@@ -1,9 +1,10 @@
 import requests
 import os
 import json
+from datetime import datetime
+from datetime import timezone
 
 bearer_token = os.environ.get("BEARER_TOKEN")
-
 
 def create_url():
     return "https://api.twitter.com/2/tweets/sample/stream?tweet.fields=created_at,lang"
@@ -25,7 +26,8 @@ def connect_to_endpoint(url):
     for response_line in response.iter_lines():
         if response_line:
             json_response = json.loads(response_line)
-            print(json.dumps(json_response, indent=4, sort_keys=True))
+            if json_response['data']['lang'] == 'en':
+                push_to_loki(json_response)
     if response.status_code != 200:
         raise Exception(
             "Request returned an error: {} {}".format(
@@ -35,7 +37,35 @@ def connect_to_endpoint(url):
 
 def push_to_loki(json_response):
     loki_url = "https://loki.lab.home/loki/api/v1/push"
-    #"Content-Type: application/json"
+
+    # figure out timestamp for Loki
+    created_at = json_response['data']['created_at']
+    datetime_object = datetime.strptime(created_at, '%Y-%m-%dT%H:%M:%S.000Z')
+    timestamp = datetime_object.replace(tzinfo=timezone.utc).timestamp()
+    timestamp_nanoseconds = int(timestamp * 1000000)
+    
+    
+    tweet = json_response['data']['text']
+    
+    submission = [timestamp_nanoseconds, tweet]
+
+    loki_request = {}
+    loki_request["streams"] = []
+
+    static_labels = {
+        "source": "twitter"
+    }
+
+    values = []
+    values.append(submission)
+    
+    internal_dict = {
+        "stream": static_labels,
+        "values": values
+    }
+
+    loki_request["streams"].append(internal_dict)
+    response = requests.request("POST", loki_url, data=loki_dict, verify=False)
 
 
 def main():
