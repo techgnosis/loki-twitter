@@ -25,18 +25,20 @@ def bearer_oauth(r):
 
 def connect_to_endpoint(url):
     response = requests.request("GET", url, auth=bearer_oauth, stream=True)
-    print(response.status_code)
+    print(f"Connection to Twitter API received {response.status_code} in return.")
+    if response.status_code != 200:
+        raise Exception(
+            f"Request returned an error: {response.status_code} {response.text}"
+        )
+        
+    
+    # this will loop forever since we're streaming with a websocket
     for response_line in response.iter_lines():
         if response_line:
             json_response = json.loads(response_line)
             if json_response['data']['lang'] == 'en':
                 push_to_loki(json_response)
-    if response.status_code != 200:
-        raise Exception(
-            "Request returned an error: {} {}".format(
-                response.status_code, response.text
-            )
-        )
+    
 
 def push_to_loki(json_response):
     loki_url = "https://loki.lab.home/loki/api/v1/push"
@@ -76,6 +78,9 @@ def push_to_loki(json_response):
         verify=False,
         headers=headers
     )
+
+    if response.status_code != 204:
+        print("Request to Loki did not get a 204 in return")
 
 
 def main():

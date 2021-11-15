@@ -2,7 +2,7 @@
   "streams": [
     {
       "stream": {
-        "subreddit": "ethdev"
+        "source": "twitter"
       },
       "values": [
           [ "1636319449333566091", "my first comment" ],
