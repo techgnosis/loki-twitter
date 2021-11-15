@@ -3,6 +3,9 @@ import os
 import json
 from datetime import datetime
 from datetime import timezone
+from requests.packages.urllib3.exceptions import InsecureRequestWarning
+
+requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
 
 bearer_token = os.environ.get("BEARER_TOKEN")
 
@@ -42,7 +45,7 @@ def push_to_loki(json_response):
     created_at = json_response['data']['created_at']
     datetime_object = datetime.strptime(created_at, '%Y-%m-%dT%H:%M:%S.000Z')
     timestamp = datetime_object.replace(tzinfo=timezone.utc).timestamp()
-    timestamp_nanoseconds = int(timestamp * 1000000)
+    timestamp_nanoseconds = int(timestamp * 1000000000)
     
     
     tweet = json_response['data']['text']
@@ -66,8 +69,6 @@ def push_to_loki(json_response):
 
     loki_request["streams"].append(internal_dict)
     headers = {'X-Scope-OrgID': 'fake', 'Content-Type': 'application/json'}
-    print(headers)
-    print(loki_request)
     response = requests.request(
         "POST",
         loki_url,
@@ -75,9 +76,6 @@ def push_to_loki(json_response):
         verify=False,
         headers=headers
     )
-
-    print(response.text)
-    print(response.status_code)
 
 
 def main():
