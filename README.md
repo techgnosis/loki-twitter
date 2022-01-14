@@ -1,3 +1,7 @@
+This repo accompanies the blog post [Low cost Twitter analysis with Loki](https://blog.grafana.com/)
+
+This repo contains all the code needed to stream tweets into either Loki or GEL. This repo does not include any code for deploying Loki or GEL. Loki is very easy to run on your laptop but you can also sign up for a [free Grafana Cloud account](https://grafana.com).
+
 GEL stands for Grafana Enterprise Logs. GEL is the paid version of Loki with many features that large companies use, such as out-of-the-box authn/authz and a GUI for speed of initial onboarding.
 
 
