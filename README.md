@@ -17,3 +17,6 @@ Use `stream-to-loki.py` or `stream-to-gel.py` to stream Tweets into either Loki 
 2. Run `pip install requests`. The "requests" library is the only dependency that's not in the standard library
 3. Export your required environment variables
 4. Run either `python3 stream-to-loki.py` or `python3 stream-to-gel.py`
+
+# Paths
+For Loki and GEL, the URL path needs to be `/loki/api/v1/push`. If you are using Grafana Cloud Logs, there will be no path.

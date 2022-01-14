@@ -8,7 +8,18 @@ from requests.packages.urllib3.exceptions import InsecureRequestWarning
 requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
 
 twitter_bearer_token = os.environ.get("TWITTER_BEARER_TOKEN")
-loki_host = os.environ.get("LOKI_HOST")
+loki_url = os.environ.get("LOKI_URL")
+
+if not twitter_bearer_token or not loki_url:
+    print("Both TWITTER_BEARER_TOKEN and LOKI_URL are required environment variables")
+    print("LOKI_URL requires scheme and path. The default Loki path is /loki/api/v1/push")
+    os.exit(1)
+
+loki_username = os.environ.get("LOKI_USERNAME")
+loki_password = os.environ.get("LOKI_PASSWORD")
+
+if loki_username and loki_password:
+    print("LOKI_USERNAME and LOKI_PASSWORD are defined. Assuming Grafana Cloud Logs or GEL")
 
 def create_url():
     return "https://api.twitter.com/2/tweets/sample/stream?tweet.fields=created_at,lang"
@@ -42,8 +53,6 @@ def connect_to_endpoint(url):
     
 
 def push_to_loki(json_response):
-    loki_url = f"https://{loki_host}/loki/api/v1/push"
-
     # figure out timestamp for Loki
     created_at = json_response['data']['created_at']
     datetime_object = datetime.strptime(created_at, '%Y-%m-%dT%H:%M:%S.000Z')
@@ -71,14 +80,26 @@ def push_to_loki(json_response):
     }
 
     loki_request["streams"].append(internal_dict)
-    headers = {'X-Scope-OrgID': 'fake', 'Content-Type': 'application/json'}
-    response = requests.request(
-        "POST",
-        loki_url,
-        data=json.dumps(loki_request),
-        verify=False,
-        headers=headers
-    )
+    
+    if loki_username and loki_password:
+        headers = {'Content-Type': 'application/json'}
+        response = requests.request(
+            "POST",
+            loki_url,
+            data=json.dumps(loki_request),
+            verify=False,
+            headers=headers,
+            auth=(loki_username, loki_password)
+        )
+    else:
+        headers = {'X-Scope-OrgID': 'fake', 'Content-Type': 'application/json'}
+        response = requests.request(
+            "POST",
+            loki_url,
+            data=json.dumps(loki_request),
+            verify=False,
+            headers=headers
+        )
 
     if response.status_code != 204:
         print("Request to Loki did not get a 204 in return")
