@@ -2,6 +2,7 @@ import requests
 import os
 import json
 import sys
+import time
 from datetime import datetime
 from datetime import timezone
 from requests.packages.urllib3.exceptions import InsecureRequestWarning
@@ -42,11 +43,16 @@ def connect_to_endpoint(url):
         
     
     # this will loop forever since we're streaming with a websocket
+    tweets = 0
     for response_line in response.iter_lines():
         if response_line:
             json_response = json.loads(response_line)
             if json_response['data']['lang'] == 'en':
-                push_to_loki(json_response)
+                if push_to_loki(json_response):
+                    time.sleep(0.1)
+                    tweets += 1
+                    if tweets % 10 == 0:
+                        print(f"Ingested {tweets} tweets")
     
 
 def push_to_loki(json_response):
@@ -100,6 +106,8 @@ def push_to_loki(json_response):
 
     if response.status_code != 204:
         print("Request to Loki did not get a 204 in return")
+
+    return True
 
 
 def main():
