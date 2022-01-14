@@ -8,6 +8,7 @@ from requests.packages.urllib3.exceptions import InsecureRequestWarning
 requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
 
 bearer_token = os.environ.get("BEARER_TOKEN")
+loki_host = os.environ.get("LOKI_HOST")
 
 def create_url():
     return "https://api.twitter.com/2/tweets/sample/stream?tweet.fields=created_at,lang"
@@ -41,7 +42,7 @@ def connect_to_endpoint(url):
     
 
 def push_to_loki(json_response):
-    loki_url = "https://loki.lab.home/loki/api/v1/push"
+    loki_url = f"https://{loki_host}/loki/api/v1/push"
 
     # figure out timestamp for Loki
     created_at = json_response['data']['created_at']

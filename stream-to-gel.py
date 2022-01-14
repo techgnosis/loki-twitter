@@ -8,6 +8,9 @@ from requests.packages.urllib3.exceptions import InsecureRequestWarning
 requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
 
 bearer_token = os.environ.get("BEARER_TOKEN")
+gel_tenant = os.environ.get("GEL_TENANT")
+gel_token = os.environ.get("GEL_TOKEN")
+gel_host = os.environ.get("GEL_HOST")
 
 def create_url():
     return "https://api.twitter.com/2/tweets/sample/stream?tweet.fields=created_at,lang"
@@ -41,7 +44,7 @@ def connect_to_endpoint(url):
     
 
 def push_to_loki(json_response):
-    loki_url = "https://gel.lab.home/loki/api/v1/push"
+    loki_url = f"https://{gel_host}/loki/api/v1/push"
 
     # figure out timestamp for Loki
     created_at = json_response['data']['created_at']
@@ -77,7 +80,7 @@ def push_to_loki(json_response):
         data=json.dumps(loki_request),
         verify=False,
         headers=headers,
-        auth=('twitter', 'dHdpdHRlci1hbGwtcHl0aG9uOnw5YFhfXC54IT4qOXA0MDAjMDQybSY2Mg==')
+        auth=(gel_tenant, gel_token)
     )
 
     if response.status_code != 204:
