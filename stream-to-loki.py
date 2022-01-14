@@ -7,7 +7,7 @@ from requests.packages.urllib3.exceptions import InsecureRequestWarning
 
 requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
 
-bearer_token = os.environ.get("BEARER_TOKEN")
+twitter_bearer_token = os.environ.get("TWITTER_BEARER_TOKEN")
 loki_host = os.environ.get("LOKI_HOST")
 
 def create_url():
@@ -19,7 +19,7 @@ def bearer_oauth(r):
     Method required by bearer token authentication.
     """
 
-    r.headers["Authorization"] = f"Bearer {bearer_token}"
+    r.headers["Authorization"] = f"Bearer {twitter_bearer_token}"
     r.headers["User-Agent"] = "v2SampledStreamPython"
     return r
 
