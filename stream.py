@@ -1,6 +1,7 @@
 import requests
 import os
 import json
+import sys
 from datetime import datetime
 from datetime import timezone
 from requests.packages.urllib3.exceptions import InsecureRequestWarning
@@ -13,17 +14,13 @@ loki_url = os.environ.get("LOKI_URL")
 if not twitter_bearer_token or not loki_url:
     print("Both TWITTER_BEARER_TOKEN and LOKI_URL are required environment variables")
     print("LOKI_URL requires scheme and path. The default Loki path is /loki/api/v1/push")
-    os.exit(1)
+    sys.exit(1)
 
 loki_username = os.environ.get("LOKI_USERNAME")
 loki_password = os.environ.get("LOKI_PASSWORD")
 
 if loki_username and loki_password:
     print("LOKI_USERNAME and LOKI_PASSWORD are defined. Assuming Grafana Cloud Logs or GEL")
-
-def create_url():
-    return "https://api.twitter.com/2/tweets/sample/stream?tweet.fields=created_at,lang"
-
 
 def bearer_oauth(r):
     """
@@ -106,7 +103,7 @@ def push_to_loki(json_response):
 
 
 def main():
-    url = create_url()
+    url = "https://api.twitter.com/2/tweets/sample/stream?tweet.fields=created_at,lang"
     timeout = 0
     while True:
         connect_to_endpoint(url)
