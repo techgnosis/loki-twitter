@@ -23,18 +23,13 @@ loki_password = os.environ.get("LOKI_PASSWORD")
 if loki_username and loki_password:
     print("LOKI_USERNAME and LOKI_PASSWORD are defined. Assuming Grafana Cloud Logs or GEL")
 
-def bearer_oauth(r):
-    """
-    Method required by bearer token authentication.
-    """
 
-    r.headers["Authorization"] = f"Bearer {twitter_bearer_token}"
-    r.headers["User-Agent"] = "v2SampledStreamPython"
-    return r
-
-
-def connect_to_endpoint(url):
-    response = requests.request("GET", url, auth=bearer_oauth, stream=True)
+def connect_to_twitter():
+    url = "https://api.twitter.com/2/tweets/sample/stream?tweet.fields=created_at,lang"
+    headers = {}
+    headers["Authorization"] = f"Bearer {twitter_bearer_token}"
+    headers['Content-Type'] = 'application/json'
+    response = requests.request("GET", url, headers=headers, stream=True)
     print(f"Connection to Twitter API received {response.status_code} in return.")
     if response.status_code != 200:
         raise Exception(
@@ -110,13 +105,5 @@ def push_to_loki(json_response):
     return True
 
 
-def main():
-    url = "https://api.twitter.com/2/tweets/sample/stream?tweet.fields=created_at,lang"
-    timeout = 0
-    while True:
-        connect_to_endpoint(url)
-        timeout += 1
-
-
 if __name__ == "__main__":
-    main()
+    connect_to_twitter()
