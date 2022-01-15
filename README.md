@@ -11,19 +11,22 @@ Use `test-loki.sh` or `test-cloud-or-gel.sh` to insert the data from `test-data.
 
 Use `time_in_ns.sh` to get current timestamps for insertion into `test-data.json` so you can find them in Loki or GEL without setting a huge time range. The timestamps that are in `test-data.json` as you read this are dated far back in the past.
 
+# Requirements to run the code
+Docker, or you can use your own Python environment if that's in your skillset
 
 # How to run
 1. Run `open-docker-env.sh` to create an interactive bash shell in the latest `python:3` container image
-1. Run `pip install requests`. The "requests" library is the only dependency that's not in the standard library
-1. Run `export LOKI_URL="your Loki URL here"`
-1. Run `export TWITTER_BEARER_TOKEN="your Twitter API bearer token here"`
-1. If you are using GEL or Grafana Cloud Logs, run `export LOKI_USERNAME="your username here"`
-1. If you are using GEL or Grafana Cloud Logs, run `export LOKI_PASSWORD="your password here"`
-1. Run either `python3 stream.py`
+1. Run `pip install requests`. The "requests" library is the only dependency that's not in the Python 3 standard library
+1. Export the following environment variables:
+    * `TWITTER_BEARER_TOKEN`
+    * `LOKI_URL`
+    * `LOKI_USERNAME` (if required)
+    * `LOKI_PASSWORD` (if required)
+1. Run `python3 stream.py`
 
 # Paths
 For Loki and GEL, the URL path needs to be `/loki/api/v1/push`. If you are using Grafana Cloud Logs, there will be no path.
 
 # Other notes
-* The code that streams Tweets from the Twitter API filters out tweets that are not in English on line 45
-* There is a 1.3s wait between each Tweet on line 47. The author's Twitter account has a limit of 2 million tweets a month and 1.3s gives me exactly 2m tweets if the script ran for a whole month.
+* The code that streams Tweets from the Twitter API filters out tweets that are not in English. The filtering occurs on line 45
+* There is a 1.3s wait between each Tweet. The wait occurs on line 47. The author's Twitter account has a limit of 2 million tweets a month and 1.3s gives me exactly 2m tweets if the script ran for a whole month.
