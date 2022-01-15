@@ -25,5 +25,5 @@ Use `stream.py` to stream Tweets into either Loki, GEL, or Grafana Cloud Logs. `
 For Loki and GEL, the URL path needs to be `/loki/api/v1/push`. If you are using Grafana Cloud Logs, there will be no path.
 
 # Other notes
-* The code that streams Tweets from the Twitter API filters out tweets that are not in English on line 50
-* There is a 100ms wait between each Tweet on line 52 since the API has a tweet limit
+* The code that streams Tweets from the Twitter API filters out tweets that are not in English on line 45
+* There is a 1.3s wait between each Tweet on line 47. The author's Twitter account has a limit of 2 million tweets a month and 1.3s gives me exactly 2m tweets if the script ran for a whole month.

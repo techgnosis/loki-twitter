@@ -37,14 +37,14 @@ def connect_to_twitter():
         )
         
     
-    # this will loop forever since we're streaming with a websocket
+    # this will loop forever since we're streaming with a websocket via stream=True in the request
     tweets = 0
     for response_line in response.iter_lines():
         if response_line:
             json_response = json.loads(response_line)
             if json_response['data']['lang'] == 'en':
                 if push_to_loki(json_response):
-                    time.sleep(0.1)
+                    time.sleep(1.3)
                     tweets += 1
                     if tweets % 10 == 0:
                         print(f"Ingested {tweets} tweets")
