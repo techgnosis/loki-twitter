@@ -5,6 +5,6 @@ set -euo pipefail
 curl \
 -vvvv \
 -H "Content-Type: application/json" \
--u $GEL_TENANT:"{$GEL_TOKEN}" \
+-u "{$LOKI_USERNAME}":"{$LOKI_PASSWORD}" \
 -d @test-data.json \
-https://gel.lab.home/loki/api/v1/push
+"{$LOKI_URL}"

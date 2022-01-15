@@ -5,11 +5,11 @@ This repo contains all the code needed to stream tweets into either Loki, GEL, o
 GEL stands for Grafana Enterprise Logs. GEL is the paid version of Loki with many features that large companies use, such as out-of-the-box authn/authz and a GUI for speed of initial onboarding.
 
 # Scripts
-Use `time_in_ns.sh` to get current timestamps for insertion into `test-data.json` so you can find them in Loki or GEL without setting a huge time range. The timestamps that are in there as you read this are probably old.
-
-Use `test-loki.sh` or `test-gel.sh` to insert the data from `test-data.json` into either Loki or GEL.
-
 Use `stream.py` to stream Tweets into either Loki, GEL, or Grafana Cloud Logs. `stream.py` relies on environment variables which are defined at the beginning of the script and explained below.
+
+Use `test-loki.sh` or `test-cloud-or-gel.sh` to insert the data from `test-data.json` into either Loki or GEL. Both scripts use the same environment variables as `stream.py`.
+
+Use `time_in_ns.sh` to get current timestamps for insertion into `test-data.json` so you can find them in Loki or GEL without setting a huge time range. The timestamps that are in `test-data.json` as you read this are dated far back in the past.
 
 
 # How to run
