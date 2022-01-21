@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: loki-twitter
+  namespace: loki-twitter
+spec:
+  selector:
+    matchLabels:
+      app: loki-twitter
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: loki-twitter
+    spec:
+      containers:
+        - name: loki-twitter
+          image: techgnosis/loki-twitter:1
+          imagePullPolicy: Always
+          env:
+            - name: TWITTER_BEARER_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: loki-twitter
+                  key: twitter_bearer_token
+            - name: LOKI_URL
+              value: "https://loki.lab.home/loki/api/v1/push"
