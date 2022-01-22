@@ -25,7 +25,7 @@ Docker, or you can use your own Python environment if that's in your skillset
 1. Run `python3 stream.py`
 
 # Paths
-For Loki and GEL, the URL path needs to be `/loki/api/v1/push`. If you are using Grafana Cloud Logs, there will be no path.
+The paths for Grafana Cloud Logs, Loki, and GEL are the same: `/loki/api/v1/push`. 
 
 # Other notes
 * The code that streams Tweets from the Twitter API filters out tweets that are not in English. The filtering occurs on line 45

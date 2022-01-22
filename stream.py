@@ -101,6 +101,7 @@ def push_to_loki(json_response):
 
     if response.status_code != 204:
         print("Request to Loki did not get a 204 in return")
+        print(f"Response code was {response.status_code}")
 
     return True
 
