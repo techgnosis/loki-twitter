@@ -1,6 +1,6 @@
 FROM python:3
 
-COPY ../stream.py /usr/src/myapp/
+COPY stream.py /usr/src/myapp/
 
 RUN pip install requests
 
