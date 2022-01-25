@@ -33,11 +33,12 @@ def connect_to_twitter():
     print(f"Connection to Twitter API received {response.status_code} in return.")
     if response.status_code != 200:
         raise Exception(
-            f"Request returned an error: {response.status_code} {response.text}"
+            f"Connection to Twitter API returned an error: {response.status_code} {response.text}"
         )
         
     
     # this will loop forever since we're streaming with a websocket via stream=True in the request
+    print("Starting tweet streaming. Updates printed to screen every 10 tweets")
     tweets = 0
     for response_line in response.iter_lines():
         if response_line:
