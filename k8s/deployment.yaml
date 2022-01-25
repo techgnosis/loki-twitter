@@ -19,7 +19,7 @@ spec:
           imagePullPolicy: Always
           env:
             - name: PYTHONUNBUFFERED
-              value: "0"
+              value: "1"
             - name: TWITTER_BEARER_TOKEN
               valueFrom:
                 secretKeyRef:
