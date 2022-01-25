@@ -15,9 +15,11 @@ spec:
     spec:
       containers:
         - name: loki-twitter
-          image: techgnosis/loki-twitter:1
+          image: techgnosis/loki-twitter:2
           imagePullPolicy: Always
           env:
+            - name: PYTHONUNBUFFERED
+              value: "0"
             - name: TWITTER_BEARER_TOKEN
               valueFrom:
                 secretKeyRef:
