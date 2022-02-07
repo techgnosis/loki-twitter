@@ -1,4 +1,4 @@
-This repo accompanies the blog post [Low cost Twitter analysis with Loki](https://blog.grafana.com/)
+This repo accompanies the blog post [Low cost Twitter analysis with Loki](https://grafana.com/blog/2022/02/07/going-off-label-with-grafana-loki-how-to-set-up-a-low-cost-twitter-analysis/)
 
 This repo contains all the code needed to stream tweets into either Loki, GEL, or Grafana Cloud Logs. This repo does not include any code for deploying Loki or GEL. Loki is very easy to run on your laptop but you can also sign up for a [free Grafana Cloud account](https://grafana.com).
 
